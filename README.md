@@ -1,3 +1,5 @@
+![Ruby](https://github.com/f5devcentral/fluent-plugin-f5-beacon/workflows/Ruby/badge.svg)
+
 # Fluent::Plugin::Beacon, a plugin for [Fluentd](http://fluentd.org)
 
 fluent-plugin-f5-beacon is a buffered output plugin for Fluentd and F5 Beacon.
