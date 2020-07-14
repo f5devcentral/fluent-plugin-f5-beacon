@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "fluentd", [">= 1.0", "< 2"]
   s.add_runtime_dependency "influxdb", [">= 0.8.0", "< 1"]
 
-  s.add_development_dependency "rake"
-  s.add_development_dependency "pry"
-  s.add_development_dependency "test-unit"
+  s.add_development_dependency "rake", '~> 13'
+  s.add_development_dependency "pry", '~> 0'
+  s.add_development_dependency "test-unit", '~> 3'
 end

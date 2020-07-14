@@ -12,6 +12,17 @@ fluent-plugin-f5-beacon is a buffered output plugin for Fluentd and F5 Beacon.
 
     $ fluent-gem install fluent-plugin-f5-beacon
 
+Alternatively, with td-agent:
+
+    $ td-agent-gem install fluent-plugin-f5-beacon
+
+Or via source (swap `td-agent-gem` for `fluent-gem` as needed):
+
+    $ git clone https://github.com/f5devcentral/fluent-plugin-f5-beacon.git
+    $ cd fluent-plugin-f5-beacon/
+    $ fluent-gem build fluent-plugin-f5-beacon.gemspec
+    $ fluent-gem install fluent-plugin-f5-beacon-#.#.#.gem
+
 ## Usage
 
 Just like other regular output plugins, use type `f5-beacon` in your Fluentd configuration under `match` scope:
