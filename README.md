@@ -1,4 +1,4 @@
-![Ruby](https://github.com/f5devcentral/fluent-plugin-f5-beacon/workflows/Ruby/badge.svg)
+![Ruby](https://github.com/f5devcentral/fluent-plugin-f5-beacon/workflows/Ruby/badge.svg) [![Gem Version](https://badge.fury.io/rb/fluent-plugin-f5-beacon.svg)](https://badge.fury.io/rb/fluent-plugin-f5-beacon)
 
 # Fluent::Plugin::Beacon, a plugin for [Fluentd](http://fluentd.org)
 
