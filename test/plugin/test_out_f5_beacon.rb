@@ -217,7 +217,7 @@ class BeaconOutputTest < Test::Unit::TestCase
             timestamp: to_ns(time),
             series: 'input.influxdb',
             values: {'a' => 2},
-            tags: {'b' => 1, 'beacon-fluent-source' => 'test-source-name'},
+            tags: {'b' => '1', 'beacon-fluent-source' => 'test-source-name'},
           },
           {
             timestamp: to_ns(time),
@@ -233,7 +233,6 @@ class BeaconOutputTest < Test::Unit::TestCase
   def test_auto_tagging
     config_with_tags = %Q(
       #{CONFIG}
-
       auto_tags true
     )
 
@@ -276,7 +275,6 @@ class BeaconOutputTest < Test::Unit::TestCase
   def test_ignore_empty_values
     config_with_tags = %Q(
       #{CONFIG}
-
       tag_keys ["b"]
     )
 
@@ -296,7 +294,7 @@ class BeaconOutputTest < Test::Unit::TestCase
             :series    => 'input.influxdb',
 
             :values    => {'a' => 2},
-            :tags      => {'b' => 1, 'beacon-fluent-source' => 'test-source-name'},
+            :tags      => {'b' => '1', 'beacon-fluent-source' => 'test-source-name'},
           }
         ]
       ]
@@ -406,6 +404,68 @@ class BeaconOutputTest < Test::Unit::TestCase
         ]
       ]
     ], driver.instance.points)
+  end
+
+  def test_nested_fields
+    driver = create_driver(CONFIG)
+
+    time = event_time("2020-01-02 13:14:15 UTC")
+    driver.run(default_tag: 'input.influxdb') do
+      driver.feed(time, {'a' => 1, 'b' => []})
+      driver.feed(time, {'a' => 2, 'c' => {'n' => 3}})
+    end
+
+    assert_equal([
+                     [
+                         [
+                             {
+                                 timestamp: to_ns(time),
+                                 series: 'input.influxdb',
+                                 values: {'a' => 1.0},
+                                 tags: {'beacon-fluent-source' => 'test-source-name'},
+                             },
+                             {
+                                 timestamp: to_ns(time),
+                                 series: 'input.influxdb',
+                                 values: {'a' => 2.0},
+                                 tags: {'beacon-fluent-source' => 'test-source-name'},
+                             },
+                         ]
+                     ]
+                 ], driver.instance.points)
+  end
+
+  def test_nested_tags
+    config_with_tags = %Q(
+    #{CONFIG}
+      tag_keys ["b"]
+    )
+    driver = create_driver(config_with_tags)
+
+    time = event_time("2020-01-02 13:14:15 UTC")
+    driver.run(default_tag: 'input.influxdb') do
+      driver.feed(time, {'a' => 1, 'b' => []})
+      driver.feed(time, {'a' => 2, 'b' => {'n' => 3}})
+    end
+
+    assert_equal([
+                     [
+                         [
+                             {
+                                 timestamp: to_ns(time),
+                                 series: 'input.influxdb',
+                                 values: {'a' => 1.0},
+                                 tags: {'beacon-fluent-source' => 'test-source-name', 'b' => '[]'},
+                             },
+                             {
+                                 timestamp: to_ns(time),
+                                 series: 'input.influxdb',
+                                 values: {'a' => 2.0},
+                                 tags: {'beacon-fluent-source' => 'test-source-name', 'b' => '{"n"=>3}'},
+                             },
+                         ]
+                     ]
+                 ], driver.instance.points)
   end
 
   def to_ns(time)
