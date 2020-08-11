@@ -68,7 +68,7 @@ events and reset to zero for a new event with the different timestamp.
 
   def start
     super
-    log.info "Starting F5 Beacon plugin..."
+    log.info "starting F5 Beacon plugin..."
   end
 
   FORMATTED_RESULT_FOR_INVALID_RECORD = ''.freeze
@@ -78,7 +78,7 @@ events and reset to zero for a new event with the different timestamp.
     record.delete_if { |k, v| v.nil? || v.to_s.empty? }
 
     if record.empty?
-      log.warn "Skip record '#{record}' in '#{tag}', because record has no values"
+      log.warn "skip record '#{record}' in '#{tag}', because record has no values"
       FORMATTED_RESULT_FOR_INVALID_RECORD
     else
       [precision_time(time), record].to_msgpack
@@ -111,14 +111,16 @@ events and reset to zero for a new event with the different timestamp.
         record.each_pair do |k, v|
           if (@auto_tags && v.is_a?(String)) || @tag_keys.include?(k)
             # If the tag value is not nil, empty, or a space, add the tag
-            if v.to_s.strip != ''
-              tags[k] = v
+            normalized_value = v.to_s.strip
+            if normalized_value != ''
+              tags[k] = normalized_value
             end
           else
             values[k] = v
           end
         end
       end
+
       if @sequence_tag
         if @prev_timestamp == timestamp
           @seq += 1
@@ -129,8 +131,15 @@ events and reset to zero for a new event with the different timestamp.
         @prev_timestamp = timestamp
       end
 
+      values.delete_if do |k, v|
+        if v.is_a?(Array) || v.is_a?(Hash)
+          log.warn "array/hash field '#{k}' discarded; consider using a plugin to map"
+          true
+        end
+      end
+
       if values.empty?
-        log.warn "Skip record '#{record}', because InfluxDB requires at least one value in raw"
+        log.warn "skip record '#{record}', because one value is required"
         next
       end
 
@@ -153,7 +162,9 @@ events and reset to zero for a new event with the different timestamp.
       points << point
     end
 
-    write_points(points)
+    if points.length > 0
+      write_points(points)
+    end
   end
 
   def write_points(points)
