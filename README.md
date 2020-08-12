@@ -56,6 +56,7 @@ Just like other regular output plugins, use type `f5-beacon` in your Fluentd con
 ```
 <match mylog.*>
   @type f5_beacon
+  @id f5_beacon
   source_name server1
   token a-123456789#token
   tag_keys ["key1", "key2"]
