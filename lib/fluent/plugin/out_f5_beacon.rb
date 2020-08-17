@@ -202,6 +202,9 @@ events and reset to zero for a new event with the different timestamp.
   def send_request(req, uri)
     res = nil
 
+    log.debug { "sending data to Beacon" }
+    log.trace { req.body }
+
     begin
       res = Net::HTTP.start(uri.host, uri.port, **http_opts(uri)) {|http| http.request(req) }
 
