@@ -36,7 +36,7 @@ module Fluent::Plugin class BeaconOutput < Output
   config_param :measurement, :string, default: nil,
                desc: "The measurement name to insert event.  If not specified, fluentd's tag is used."
   config_param :time_key, :string, default: 'time',
-               desc: 'Use value of this tag if it exists in event instead of event timestamp.'
+               desc: 'Use value of this tag if it exists in event instead of event timestamp.  Values must be in Epoch time.'
   config_param :auto_tags, :bool, default: false,
                desc: "Enable/disable auto-tagging behavior which makes strings tags."
   config_param :tag_keys, :array, default: [],
@@ -101,7 +101,7 @@ events and reset to zero for a new event with the different timestamp.
     points = []
     tag = chunk.metadata.tag
     chunk.msgpack_each do |time, record|
-      timestamp = record.delete(@time_key) || time
+      timestamp = precision_time(record.delete(@time_key)) || time
       if tag_keys.empty? && !@auto_tags
         values = record
         tags = {}
@@ -120,7 +120,6 @@ events and reset to zero for a new event with the different timestamp.
           end
         end
       end
-
       if @sequence_tag
         if @prev_timestamp == timestamp
           @seq += 1
@@ -179,6 +178,8 @@ events and reset to zero for a new event with the different timestamp.
   end
 
   def precision_time(time)
+    return if time.nil?
+
     # nsec is supported from v0.14
     time * (10 ** 9) + (time.is_a?(Integer) ? 0 : time.nsec)
   end
@@ -236,3 +237,4 @@ events and reset to zero for a new event with the different timestamp.
 
 end
 end
+
