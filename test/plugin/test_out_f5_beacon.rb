@@ -389,7 +389,7 @@ class BeaconOutputTest < Test::Unit::TestCase
 
     time = event_time("2020-01-02 13:14:15 UTC")
     driver.run(default_tag: 'input.influxdb') do
-      driver.feed(time, {'a' => 1, 'b' => 1293974055000000000})
+      driver.feed(time, {'a' => 1, 'b' => 1293974055})
     end
 
     assert_equal([
