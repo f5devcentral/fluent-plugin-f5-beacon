@@ -36,7 +36,7 @@ module Fluent::Plugin class BeaconOutput < Output
   config_param :measurement, :string, default: nil,
                desc: "The measurement name to insert event.  If not specified, fluentd's tag is used."
   config_param :time_key, :string, default: 'time',
-               desc: 'Use value of this tag if it exists in event instead of event timestamp.'
+               desc: 'Use value of this tag if it exists in event instead of event timestamp.  Values must be in Epoch time.'
   config_param :auto_tags, :bool, default: false,
                desc: "Enable/disable auto-tagging behavior which makes strings tags."
   config_param :tag_keys, :array, default: [],
