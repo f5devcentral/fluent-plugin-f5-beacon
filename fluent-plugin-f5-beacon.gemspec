@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name          = "fluent-plugin-f5-beacon"
-  s.version       = '0.0.3'
+  s.version       = '0.0.4'
   s.authors       = ["Matt Davey"]
   s.email         = ["m.davey@f5.com"]
   s.description   = %q{F5 Beacon output plugin for Fluentd}
