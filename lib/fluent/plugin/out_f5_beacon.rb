@@ -132,7 +132,7 @@ events and reset to zero for a new event with the different timestamp.
 
       values.delete_if do |k, v|
         if v.is_a?(Array) || v.is_a?(Hash)
-          log.warn "array/hash field '#{k}' discarded; consider using a plugin to map"
+          log.warn "array/hash field '#{k}' discarded; consider using other Fluentd plugins to properly map it"
           true
         end
       end
