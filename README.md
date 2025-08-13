@@ -1,3 +1,5 @@
+## *This repository is archived and is no longer actively maintained by F5*
+
 ![Ruby](https://github.com/f5devcentral/fluent-plugin-f5-beacon/workflows/Ruby/badge.svg) [![Gem Version](https://badge.fury.io/rb/fluent-plugin-f5-beacon.svg)](https://badge.fury.io/rb/fluent-plugin-f5-beacon)
 
 # Fluent::Plugin::Beacon, a plugin for [Fluentd](http://fluentd.org)
